@@ -14,6 +14,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 /**
@@ -22,14 +23,53 @@ import javax.inject.Singleton
  */
 @InstallIn(SingletonComponent::class)
 @Module
-object RetrofitModule {
+object NetworkModule {
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class ApiUrl
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class ApiKeys
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class NoConnectionInterceptor
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class InternetInterceptor
+
+    @Provides
+    @ApiUrl
+    @Singleton
+    fun providesApiUrl(): String = BuildConfig.BASE_URL
+
+    @Provides
+    @ApiKeys
+    @Singleton
+    fun providesApiKey(): String = BuildConfig.APIKEY
 
     @Singleton
     @Provides
+    @NoConnectionInterceptor
     internal fun provideNoConnectionInterceptor(
         @ApplicationContext mContext: Context
     ): Interceptor {
         return NoConnectionInterceptor(mContext)
+    }
+
+    @Singleton
+    @Provides
+    @InternetInterceptor
+    internal fun providesInternetInterceptor(
+        @ApiKeys apiKey: String
+    ): Interceptor {
+        return Interceptor {
+            val request = it.request().newBuilder().addHeader("x-api-key", apiKey).build()
+            val response = it.proceed(request)
+            response
+        }
     }
 
     @Singleton
@@ -47,29 +87,22 @@ object RetrofitModule {
     @Provides
     internal fun provideOkhttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
-        noConnectionInterceptor: Interceptor,
+        @NoConnectionInterceptor noConnectionInterceptor: Interceptor,
+        @InternetInterceptor internetInterceptor: Interceptor
     ): OkHttpClient {
-        val okHttpClient = OkHttpClient.Builder()
-            .addNetworkInterceptor { chain ->
-                val request = chain.request().newBuilder().addHeader(
-                    "Connection",
-                    "close"
-                ).build()
-                chain.proceed(request)
-            }
+        return OkHttpClient.Builder()
             .addInterceptor(noConnectionInterceptor)
             .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(internetInterceptor)
             .connectTimeout(20, TimeUnit.SECONDS)
             .readTimeout(20, TimeUnit.SECONDS)
             .build()
-
-        return okHttpClient
     }
 
     @Provides
-    internal fun provideServiceRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    internal fun provideServiceRetrofit(@ApiUrl url: String, okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(url)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()

@@ -8,5 +8,4 @@ import dagger.hilt.android.HiltAndroidApp
  * Package net.iqbalfauzan.newsapplication
  */
 @HiltAndroidApp
-class NewsApplications : Application(){
-}
+class NewsApplications : Application()
