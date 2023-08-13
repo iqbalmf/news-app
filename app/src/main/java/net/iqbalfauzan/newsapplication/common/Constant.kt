@@ -14,3 +14,4 @@ val CATEGORY_SOURCE_NEWS = arrayListOf<String>(
     "sports",
     "technology"
 )
+const val FLAG_IMAGE_URL = "https://flagcdn.com/w80/#img.png"

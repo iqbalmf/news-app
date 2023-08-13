@@ -12,6 +12,10 @@
         <action
             android:id="@+id/action_category_to_source"
             app:destination="@id/nav_source" />
+        <action
+            android:id="@+id/action_home_to_search"
+            app:destination="@id/nav_search" />
+
     </fragment>
 
     <fragment
@@ -21,6 +25,47 @@
         tools:layout="@layout/fragment_source">
         <argument
             android:name="category"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_source_to_article"
+            app:destination="@id/nav_article" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_search"
+        android:name="net.iqbalfauzan.newsapplication.feature.fragment.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_search_to_detailArticle"
+            app:destination="@id/nav_detail_article" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_article"
+        android:name="net.iqbalfauzan.newsapplication.feature.fragment.ArticleFragment"
+        android:label="fragment_article"
+        tools:layout="@layout/fragment_article" >
+        <argument
+            android:name="sources"
+            app:argType="string" />
+
+        <argument
+            android:name="sourceId"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_article_to_detailArticle"
+            app:destination="@id/nav_detail_article" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_detail_article"
+        android:name="net.iqbalfauzan.newsapplication.feature.fragment.DetailArticleFragment"
+        android:label="fragment_detail_article"
+        tools:layout="@layout/fragment_detail_article">
+        <argument
+            android:name="url"
             app:argType="string" />
     </fragment>
 

@@ -7,7 +7,9 @@ package net.iqbalfauzan.newsapplication.data.model
 data class ArticleResponse(
     val status: String? = "",
     val totalResult: Int? = 0,
-    val articles: List<NewsArticleResponse>? = arrayListOf()
+    val articles: List<NewsArticleResponse>? = arrayListOf(),
+    val code: String? = null,
+    val message: String? = null
 )
 
 data class NewsArticleResponse(

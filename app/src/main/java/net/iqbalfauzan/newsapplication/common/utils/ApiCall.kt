@@ -33,6 +33,8 @@ suspend fun <T : Any> ApiCall(
                 "500 Internal Server Error"
             } else if (codeResp == 504) {
                 "504 Response Timeout"
+            } else if (codeResp == 400){
+                "400 Param Missing"
             }
             else {
                 errorRaw

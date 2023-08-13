@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import id.anteraja.guardian.framework.listener.CommonActionDataListener
+import net.iqbalfauzan.newsapplication.common.FLAG_IMAGE_URL
 import net.iqbalfauzan.newsapplication.data.model.NewsSourceResponse
 import net.iqbalfauzan.newsapplication.databinding.ItemSourceBinding
 
@@ -31,7 +33,18 @@ class SourceAdapter(
         if (data is SourceModel.SourceItem && holder is ItemSource) {
             holder.apply {
                 binding.apply {
-                    nameSource.text = data.source.name
+                    sourceName.text = data.source.name
+                    sourceDescription.text = data.source.description
+                    Glide.with(this.root.context).load(FLAG_IMAGE_URL.replace("#img",(data.source.country?:"").lowercase().let {
+                        if (it == "zh"){
+                            "cn"
+                        }else{
+                            it
+                        }
+                    })).into(imageFlag)
+                    layoutSource.setOnClickListener {
+                        listener.onCLick(data.source)
+                    }
                 }
             }
         }

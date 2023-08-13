@@ -41,7 +41,7 @@ class NewsRepositoryImpl @Inject constructor(
                 if (response.data?.status.equals("ok", true)) {
                     NetworkStatus.Success(response.data)
                 } else {
-                    NetworkStatus.Error(response.data?.status)
+                    NetworkStatus.Error(response.data?.message)
                 }
             } else {
                 NetworkStatus.Error(response.errorMessage)

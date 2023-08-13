@@ -60,5 +60,10 @@ class HomeFragment : Fragment() {
                 }
             }
         )
+        binding?.apply {
+            searchNews.setOnClickListener {
+                findNavController().navigate(HomeFragmentDirections.actionHomeToSearch())
+            }
+        }
     }
 }
