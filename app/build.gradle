@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -22,9 +23,11 @@ android {
     buildTypes {
         debug {
             buildConfigField "String", "APIKEY", api_key
+            buildConfigField "String", "BASE_URL", base_url
         }
         release {
             buildConfigField "String", "APIKEY", api_key
+            buildConfigField "String", "BASE_URL", base_url
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\
         }
@@ -37,7 +40,7 @@ android {
         jvmTarget = '1.8'
     }
     buildFeatures {
-        dataBinding true
+        viewBinding true
     }
 }
 
@@ -53,6 +56,14 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "com.google.dagger:hilt-android:$hilt"
     kapt "com.google.dagger:hilt-compiler:$hilt"
+
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6"
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
 
 
     testImplementation 'junit:junit:4.13.2'
